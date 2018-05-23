@@ -1,0 +1,12 @@
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+{% endif %}
+	{% if logs_list %}
+	    <ul>
+	    {% for log in logs_list %}
+	        <li><a href="{% url 'logs:detail' log.id %}">{{ log.log_date }}</a></li>
+	    {% endfor %}
+	    </ul>
+	{% else %}
+	    <p>No users are available.</p>
+	{% endif %}
