@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
 
 
 # Create your models here.
-
 
 class Project(models.Model):
 	project_name = models.CharField(max_length=200)
@@ -22,9 +22,9 @@ class Project(models.Model):
 class Log(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, blank=False, null=True, on_delete=models.SET_NULL)
-    duration = models.IntegerField()
-    log_date = models.DateField(auto_now=False, auto_now_add=False)
+    duration = models.DecimalField(max_digits=10, decimal_places=3)
+    log_date = models.DateField(auto_now=False, auto_now_add=False, default=datetime.date.today)
     date_logged = models.DateField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
-    	return str(self.log_date)
+    	return str(self.project) + " - " + str(self.duration) + " - " + str(self.log_date)

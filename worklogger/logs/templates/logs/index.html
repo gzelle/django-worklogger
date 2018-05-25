@@ -1,12 +1,38 @@
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+</head>
+
 {% if user.is_authenticated %}
   Hi {{ user.username }}!
 {% endif %}
+<form action="{% url 'logs:index' %}" method="get">
+	{% csrf_token %}
+    <label for="">Choose date: </label>
+    <input type="text" id="datepicker" value="{{filter}}" name="filter">
+    <input type="submit" value="Filter" />
+</form>
+<script>
+$( "#datepicker" ).datepicker({
+    dateFormat: "yy-mm-dd",
+    changeMonth: true,
+    numberOfMonths: 1,
+});
+$( "#datepicker" ).datepicker("setDate", 'today');
+</script>
+Total hours: {{ total_hours }}
 	{% if logs_list %}
 	    <ul>
+	    {% now "DATE_FORMAT" as current_date %}
 	    {% for log in logs_list %}
-	        <li><a href="{% url 'logs:detail' log.id %}">{{ log.log_date }}</a></li>
+	        <li><a href="{% url 'logs:detail' log.id %}">{{ log.project }} {{ log.duration }} {{ log.log_date }}</a></li>
+
 	    {% endfor %}
 	    </ul>
 	{% else %}
-	    <p>No users are available.</p>
+	    <p>No logs for this day.</p>
 	{% endif %}
+
+<a href="{% url 'logs:log_new' %}">Log</a>
+{% include 'logs/new.html' with log_date=filter %}
