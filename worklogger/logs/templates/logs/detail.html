@@ -2,6 +2,6 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-{{ log.duration }}<br/>
-{{ log.user }}<br/>
-{{ log.project }}<br/>
+Hours logged: {{ log.duration }}<br/>
+Project: {{ log.project }}<br/>
+Date logged: {{ log.date_logged }}
