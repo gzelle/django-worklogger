@@ -10,10 +10,35 @@ table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 100%;
+    font-size: 15px;
+    color: #333333;
+    border: 1px #999999 solid;
 }
 
 td, th {
-    border: 1px solid #dddddd;
+    border: 1px #DDDDDD solid;
     text-align: left;
     padding: 8px;
 }
+
+table.loglist th {
+	color: #FFFFFF;
+	border: 1px solid #EFEFEF;
+	padding: 12px;
+	background-color: #3E93EF;
+}
+
+table.loglist td {
+	border-width: 1px #EFEFEF solid;
+	padding: 8px;
+}
+
+table.loglist tr {
+	background-color: #FFFFFF;
+}
+
+table.loglist tr:hover {
+	background-color: #EFEFEF;
+}
+
+

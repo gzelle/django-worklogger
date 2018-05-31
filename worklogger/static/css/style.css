@@ -1,0 +1,13 @@
+.form-container {
+    max-width: 330px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #eee;
+}
+.form-login {
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-login .form-login-heading {
+  margin-bottom: 10px;
+}

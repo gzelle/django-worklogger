@@ -3,14 +3,16 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!<br>
-  <a href="{% url 'logs:index' %}">See logs</a><br>
-  <a href="{% url 'logs:log_new' %}">Log</a><br>
-  <p><a href="{% url 'logout' %}">Logout</a></p>
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">Login</a>
-{% endif %}
+<div class="container-fluid">
+    {% if user.is_authenticated %}
+        <p> Hi {{ user.username }}! <a href="{% url 'logout' %}">Logout</a> </p>
+        <div><a href="{% url 'logs:index' %}">See logs</a><div><br>
+        <div><a href="{% url 'logs:new' %}">Log</a><div><br>
+
+    {% else %}
+        <p>You are not logged in</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+    {% endif %}
+</div>
 {% endblock %}
 

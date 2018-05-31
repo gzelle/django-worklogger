@@ -1,71 +1,112 @@
 {% load static %}
-
-{% block content %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'logs/style.css' %}" />
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'logs/style.css' %}" />
+	<link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
-{% if user.is_authenticated %}
-  Hi {{ user.username }}! <a href="{% url 'logout' %}">Logout</a><br><br>
+<body>
+    {% block content %}
 
-	<form action="{% url 'logs:index' %}" method="get">
-		{% csrf_token %}
-	    <label for="">Choose a date: </label>
-	    <input type="text" id="datepicker" name="filter"><br>
-	    <label for="">View logs by: </label>
-	    <select name="view">
-	    	<option value="day">Selected day</option>
-	    	<option value="week">Week</option>
-	    	<option value="month">Month</option>n>
-		</select>
-	    <input type="submit" value="Filter" />
-	</form>
-	<script>
-	$( "#datepicker" ).datepicker({
-	    dateFormat: "yy-mm-dd",
-	    changeMonth: true,
-	    numberOfMonths: 1,
-	});
-	$( "#datepicker" ).datepicker("setDate", 'today');
-	</script>
-	Total hours:
-		{% if logs_list %}
-		    <table>
-		    <tr>
-		    	<th>Project</th>
-		    	<th>Hours</th>
-			</tr>
-		    {% for log in logs_list %}
-		    
-		    <tr>
-		    	<td></td>
-		        {% if log.date_logged > log.log_date %}
-			        	<td><a href="{% url 'logs:detail' log.id%}" class="late-logs">{{ log.duration }} hr{{log.duration|pluralize}}</a></td>
-			        </tr>
-		        {% else %}
-			        	<td><a href="{% url 'logs:detail' log.id %}">{{ log.duration }} hr{{log.duration|pluralize}}</a></td>
-			        
-		        {% endif %}
-		    </tr>
-		    {% endfor %}
-		    <tr>
-		    	<td>Total</td>
-		    	<td></td>
-		    </tr>
-		    </table>
+	<div class="container-fluid">
+		{% if user.is_authenticated %}
+
+		  Hi {{ user.username }}! <a href="{% url 'logout' %}">Logout</a><br><br>
+
+			<form action="{% url 'logs:index' %}" method="get">
+				{% csrf_token %}
+				<label for="">Choose a date: </label>
+				<input type="text" id="datepicker" name="filter"><br>
+				<label for="">View logs by: </label>
+				<select name="view">
+					<option value="day">Selected day</option>
+					<option value="week">Week</option>
+					<option value="month">Month</option>n>
+				</select>
+				<input type="submit" value="Filter" class="btn btn-info"/>
+			</form>
+			<script>
+			$( "#datepicker" ).datepicker({
+				dateFormat: "yy-mm-dd",
+				changeMonth: true,
+				numberOfMonths: 1,
+			});
+			$( "#datepicker" ).datepicker("setDate", 'today');
+			</script>
+
+			<h5>Total hours: {{ user.profile.total_hours }} hr{{user.profile.total_hours|pluralize}} </h5>
+		
+			{% if logs_list %}
+			<table class="loglist">
+				<tr>
+					<th>Date</th>
+					<th>Hours</th>
+					<th>Project</th>
+					<th>Actions</th>
+				</tr>
+
+				{% for log in logs_list %}
+
+				<tr>
+					<td> {{ log.log_date }} </td>
+					<td>
+						{% if log.date_logged > log.log_date %}
+							<a href="{% url 'logs:detail' log.id%}" class="late-logs">{{ log.duration }} hr{{log.duration|pluralize}}</a> 
+						{% else %}
+							<a href="{% url 'logs:detail' log.id %}">{{ log.duration }} hr{{log.duration|pluralize}}</a>
+						{% endif %}
+					</td>
+					<td> {{ log.project }} </td>
+					<td>
+						&nbsp;
+						<a href="{% url 'logs:delete' log.pk %}" data-toggle="modal" data-target="#deleteLogModal" title="Delete Log"><i class="fas fa-trash-alt"></i></a>&nbsp;
+						<a href="{% url 'logs:update' log.pk %}" title="Move to date" id="datepicker"><i class="fas fa-calendar-alt"></i></a>
+
+					    <!-- Modal HTML -->
+					    <div id="deleteLogModal" class="modal fade">
+					        <div class="modal-dialog">
+					            <div class="modal-content">
+					                <!-- Content will be loaded here from "remote.php" file -->
+					            </div>
+					        </div>
+					    </div>
+
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datepicker').datepicker({
+                                    inline: true,
+                                    sideBySide: true
+                                });
+                            });
+                            $("#datepicker").click(function() {
+                                $("#datepicker").datepicker("show");
+                            });
+                        </script>
+					</td>
+				</tr>
+
+				{% endfor %}
+
+			</table><br>
+			{% else %}
+				<p>No logs for this day.</p>
+			{% endif %}
+			<br>
+
+			<a href="{% url 'logs:new' %}" class="btn btn-primary">Log</a>
+            {% include 'logs/new.html' %}
+
 		{% else %}
-		    <p>No logs for this day.</p>
+		  <p>You are not logged in</p>
+		  <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
 		{% endif %}
-
-	<a href="{% url 'logs:log_new' %}">Log</a>
-
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">Login</a>
-{% endif %}
+	</div>
+</body>
 {% endblock %}
-

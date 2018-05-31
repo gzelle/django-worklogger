@@ -2,13 +2,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>{% block title %}Worklogger{% endblock %}</title>
+    <meta charset="utf-8">
+    <title>{% block title %}Worklogger{% endblock %}</title>
 </head>
 <body>
-  <main>
-    {% block content %}
-    {% endblock %}
-  </main>
+    <main>
+        {% load bootstrap3 %}
+        {% bootstrap_css %}
+        {% block content %}
+        {% endblock %}
+    </main>
 </body>
 </html>

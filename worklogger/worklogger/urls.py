@@ -19,9 +19,8 @@ from django.contrib.auth import views as auth_views
 from logs.views import home
 
 urlpatterns = [
-	#url('/', TemplateView.as_view(template_name='home.html'), name='home'),
-	url(r'^logs/', include('logs.urls')),
-	url(r'^login/$', auth_views.login, name='login'),
+    url(r'^logs/', include('logs.urls')),
+    url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^auth/', include('social_django.urls', namespace='social')),
     url(r'^$', home, name='home'),

@@ -4,7 +4,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 </head>
 
-<form action="{% url 'logs:log_new' %}" method="post">
+<form action="{% url 'logs:new' %}" method="post">
 	{% csrf_token %}
     {% for field in form %}
         {{ field.errors }}
